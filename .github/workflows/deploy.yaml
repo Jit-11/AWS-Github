@@ -22,4 +22,5 @@ jobs:
                   source: "*"
                   target: "/tmp"
                   scripts: |
+                      pwd
                       ls -la /tmp/myapp/
