@@ -22,7 +22,6 @@ jobs:
                   host: ${{ secrets.EC2_HOST}}
                   username: ${{secrets.EC2_USERNAME}}
                   key: ${{secrets.EC2_SSH_KEY}}
-                  port: ${{secrets.EC2_SSH_PORT}}
                   source: "index.html"
                   target: "/tmp"
 
@@ -35,7 +34,6 @@ jobs:
                   host: ${{ secrets.EC2_HOST}}
                   username: ${{secrets.EC2_USERNAME}}
                   key: ${{secrets.EC2_SSH_KEY}}
-                  port: ${{secrets.EC2_SSH_PORT}}
                   script: |
                       whoami
                       sudo cp /tmp/index.html /usr/share/nginx/html/index.html
