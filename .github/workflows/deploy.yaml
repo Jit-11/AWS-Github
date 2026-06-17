@@ -1,26 +1,45 @@
-name: Deploying file in AWS ec2
-run-name: This files is deploy by ${{ github.actor }}
+name: Deploy React App
 
 on:
     push:
-        branches: [master]
+        branches:
+            - master
 
 jobs:
-    build-and-test:
+    deploy:
         runs-on: ubuntu-latest
 
         steps:
-            - name: checkout repository
-              uses: actions/checkout@v2
+            - name: Checkout Repository
+              uses: actions/checkout@v4
 
-            - name: copy to ec2 using ssh
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+
+            - name: Install Dependencies
+              run: npm install
+
+            - name: Build Project
+              run: npm run build
+
+            - name: Copy dist to EC2
               uses: appleboy/scp-action@v0.1.7
               with:
-                  host: ${{ secrets.EC2_HOST}}
-                  username: ${{secrets.EC2_USERNAME}}
-                  key: ${{secrets.EC2_SSH_KEY}}
-                  source: "*"
-                  target: "/tmp"
-                  scripts: |
-                      pwd
-                      ls -la /tmp/myapp/
+                  host: ${{ secrets.EC2_HOST }}
+                  username: ${{ secrets.EC2_USERNAME }}
+                  key: ${{ secrets.EC2_SSH_KEY }}
+                  source: "dist/*"
+                  target: "/tmp/react-app"
+
+            - name: Deploy on EC2
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.EC2_HOST }}
+                  username: ${{ secrets.EC2_USERNAME }}
+                  key: ${{ secrets.EC2_SSH_KEY }}
+                  script: |
+                      sudo rm -rf /usr/share/nginx/html/*
+                      sudo cp -r /tmp/react-app/dist/* /usr/share/nginx/html/
+                      sudo systemctl restart nginx
