@@ -26,6 +26,9 @@ jobs:
                   source: "index.html"
                   target: "/tmp"
 
+            - name: Print file
+              run: ls -la /tmp
+
             - name: Deploy this file to Ec2
               uses: appleboy/ssh-action@v1
               with:
