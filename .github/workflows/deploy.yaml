@@ -3,7 +3,7 @@ run-name: This files is deploy by ${{ github.actor }}
 
 on:
     push:
-        branches: [main, master]
+        branches: [master]
 
 jobs:
     build-and-test:
@@ -21,6 +21,5 @@ jobs:
                   key: ${{secrets.EC2_SSH_KEY}}
                   source: "*"
                   target: "/tmp"
-
-            - name: Print file
-              run: ls -la /tmp/myapp
+                  scripts: |
+                      ls -la /tmp/myapp/
