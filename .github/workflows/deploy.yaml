@@ -16,5 +16,27 @@ jobs:
             - name: Print statement
               run: echo "I am Jit patel"
 
-            - name: Print EC2_USERNAME
-              run: echo ${{ secrets.EC2_USERNAME}}
+            - name: copy to ec2 using ssh
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.EC2_HOST}}
+                  username: ${{secrets.EC2_HOST}}
+                  key: ${{secrets.EC2_SSH_KEY}}
+                  port: ${{secrets.EC2_SSH_PORT}}
+                  source: "index.html"
+                  target: "/tmp"
+
+            - name: Deploy this file to Ec2
+              uses: appleboy/ssh-action@v1
+              with:
+                  host: ${{ secrets.EC2_HOST}}
+                  username: ${{secrets.EC2_HOST}}
+                  key: ${{secrets.EC2_SSH_KEY}}
+                  port: ${{secrets.EC2_SSH_PORT}}
+                  script: |
+                      whoami
+                      sudo cp /tmp/index.html /usr/share/nginx/html/index.html
+                      sudo systemctl reload nginx
+
+            - name: Successfully Deploy
+              run: echo "End of action"
