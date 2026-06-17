@@ -1,0 +1,26 @@
+name: Deploying file in AWS ec2
+run-name: This files is deploy by ${{ github.actor }}
+
+on:
+    push:
+        branches: [main, master]
+
+jobs:
+    build-and-test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: checkout repository
+              uses: actions/checkout@v2
+
+            - name: copy to ec2 using ssh
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                  host: ${{ secrets.EC2_HOST}}
+                  username: ${{secrets.EC2_USERNAME}}
+                  key: ${{secrets.EC2_SSH_KEY}}
+                  source: "*"
+                  target: "/tmp"
+
+            - name: Print file
+              run: ls -la /tmp
