@@ -15,3 +15,6 @@ jobs:
 
             - name: Print statement
               run: echo "I am Jit patel"
+
+            - name: Print EC2_USERNAME
+              run: echo ${{ secrets.EC2_USERNAME}}
