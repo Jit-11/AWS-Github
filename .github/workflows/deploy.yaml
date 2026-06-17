@@ -23,4 +23,4 @@ jobs:
                   target: "/tmp"
 
             - name: Print file
-              run: ls -la /tmp
+              run: ls -la /tmp/myapp
